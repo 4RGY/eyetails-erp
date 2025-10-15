@@ -17,8 +17,8 @@ class CampaignController extends Controller
     public function create()
     {
         $subscriberCount = User::where('is_admin', false)
-                                ->where('notif_promo', true)
-                                ->count();
+            ->where('notif_promo', true)
+            ->count();
 
         return view('admin.campaigns.create', compact('subscriberCount'));
     }
@@ -34,8 +34,8 @@ class CampaignController extends Controller
         ]);
 
         $subscribers = User::where('is_admin', false)
-                           ->where('notif_promo', true)
-                           ->get();
+            ->where('notif_promo', true)
+            ->get();
 
         if ($subscribers->isEmpty()) {
             return redirect()->route('admin.campaigns.create')->with('error', 'Tidak ada pelanggan yang berlangganan notifikasi promo.');

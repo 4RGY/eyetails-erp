@@ -48,8 +48,9 @@
                     <li><a href="{{ route('wishlist.index') }}"
                             class="{{ request()->routeIs('wishlist.index') ? 'active' : '' }}"><i
                                 class="far fa-heart fa-fw"></i> <span>Wishlist</span></a></li>
-                                <li><a href="{{ route('chat.index') }}" class="{{ request()->routeIs('chat.*') ? 'active' : '' }}"><i
-                                            class="far fa-comments fa-fw"></i> <span>Pesan Saya</span></a></li>
+                    <li><a href="{{ route('chat.index') }}"
+                            class="{{ request()->routeIs('chat.*') ? 'active' : '' }}"><i
+                                class="far fa-comments fa-fw"></i> <span>Pesan Saya</span></a></li>
                     <li><a href="/syarat-loyalitas"><i class="fas fa-medal fa-fw"></i> <span>Loyalitas & Tier</span></a>
                     </li>
                     <li>
