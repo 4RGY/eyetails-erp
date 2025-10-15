@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'is_admin',
+        'gender',
+        'date_of_birth',
+        'loyalty_points',
+        'tier',
+        'address', 
+        'phone',  
+        'notif_promo',
+        'notif_order_updates',
+        'status',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'notif_promo' => 'boolean', // <-- TAMBAHKAN INI
+        'notif_order_updates' => 'boolean', // <-- TAMBAHKAN INI
+    ];
+
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+    public function interactions()
+    {
+        return $this->hasMany(UserInteraction::class)->latest();
+    }
+    public function conversations()
+    {
+        return $this->hasMany(Conversation::class);
+    }
+}

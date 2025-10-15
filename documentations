@@ -1,0 +1,164 @@
+### **DOKUMENTASI WEBSITE**
+
+---
+
+### **FASE 1 | TANGGAL 01 - 05 Oktober**
+
+1.  **Instalasi Lingkungan & Setup Awal**
+    * Inisialisasi proyek Laravel baru: `composer create-project laravel/laravel eyetails.co`
+    * Generate kunci aplikasi: `php artisan key:generate --ansi`
+    * Konfigurasi koneksi database dan variabel lingkungan lainnya di file `.env`.
+    * Instalasi dependensi frontend: `npm install`
+    * Menjalankan migrasi awal untuk membuat tabel `users`, `password_reset_tokens`, `failed_jobs`, dan `personal_access_tokens`.
+    * Menjalankan server pengembangan lokal: `php artisan serve`
+
+2.  **Migrasi Tabel Kategori & Produk**
+    * Membuat file migrasi untuk tabel kategori: `php artisan make:migration create_categories_table`.
+    * Mendefinisikan skema tabel `categories` dengan kolom `name`, `slug`, dan `image`.
+    * Membuat file migrasi untuk tabel produk: `php artisan make:migration create_products_table`.
+    * Mendefinisikan skema tabel `products` dengan relasi `category_id`, serta kolom `name`, `description`, `price`, `sku`, `stock_quantity`, dan `image`.
+
+3.  **Model & Relasi Dasar**
+    * Menjalankan migrasi untuk membuat tabel di database: `php artisan migrate`.
+    * Membuat model Eloquent: `php artisan make:model Category` dan `php artisan make:model Product`.
+    * Menambahkan relasi `hasMany` pada model `Category` untuk menghubungkannya ke `Product`.
+    * Menambahkan relasi `belongsTo` pada model `Product` untuk menghubungkannya ke `Category`.
+
+4.  **Seeder (Pengisian Data Awal)**
+    * Membuat seeder untuk data awal: `php artisan make:seeder UserSeeder`, `php artisan make:seeder CategorySeeder`, `php artisan make:seeder ProductSeeder`.
+    * Mengisi `UserSeeder` dengan data admin default (`admin@eyetails.co`).
+    * Mengisi `CategorySeeder` dengan data kategori seperti 'T-Shirt', 'Hoodie & Sweater', dll.
+    * Mengisi `ProductSeeder` dengan beberapa data produk awal.
+    * Mendaftarkan seeder di `DatabaseSeeder.php` dan menjalankannya: `php artisan db:seed`.
+
+5.  **Pengembangan Halaman Statis**
+    * Membuat `HomeController` untuk halaman utama.
+    * Mengambil data produk terbaru, produk terlaris, dan kategori di `HomeController` untuk ditampilkan di `home.blade.php`.
+    * Membuat `PageController` untuk mengelola halaman statis lainnya.
+    * Membuat view untuk halaman 'Tentang Kami' (`about.blade.php`), 'FAQ' (`faq.blade.php`), 'Syarat & Ketentuan' (`terms.blade.php`), 'Kebijakan Privasi' (`privacy.blade.php`), dan 'Testimoni' (`testimoni.blade.php`).
+    * Menambahkan route di `web.php` untuk semua halaman statis tersebut.
+
+6.  **Fitur Kontak & Blog**
+    * Konfigurasi `.env` untuk pengiriman email.
+    * Membuat Mailable: `php artisan make:mail ContactUsMail`.
+    * Membuat `ContactController` untuk menangani logika pengiriman email dari form kontak.
+    * Menambahkan route untuk menampilkan dan mengirim form kontak.
+    * Membuat `Post` model beserta migrasinya: `php artisan make:model Post -m`.
+    * Membuat `BlogController` untuk menampilkan daftar artikel dan detail artikel.
+    * Menambahkan route untuk halaman blog dan detail artikel di `web.php`.
+
+---
+
+### **FASE 2 | TANGGAL 06 - 10 Oktober**
+
+1.  **Sistem Autentikasi & Akun Pengguna**
+    * Instalasi Laravel Breeze untuk scaffolding autentikasi: `composer require laravel/breeze --dev`, `php artisan breeze:install`.
+    * Migrasi untuk menambahkan kolom demografis (`gender`, `date_of_birth`) ke tabel `users`.
+    * Memodifikasi `RegisteredUserController` untuk menyimpan data demografis saat registrasi.
+    * Membuat `DashboardController` untuk admin dan halaman dashboard pengguna.
+    * Membuat Master Layout Akun (`akun/master.blade.php`) sebagai template untuk semua halaman terkait akun pengguna.
+    * Mengembangkan halaman Pengaturan Profil (`profile/edit.blade.php`) beserta partialsnya untuk update profil, password, dan hapus akun.
+
+2.  **Katalog & Detail Produk**
+    * Mengembangkan `ProductController` untuk menampilkan daftar produk dengan fitur filter per kategori dan sorting (terbaru, harga terendah/tertinggi).
+    * Membuat view `katalog/index.blade.php` dan `katalog/show.blade.php`.
+    * Membuat Blade component `product-card.blade.php` untuk tampilan kartu produk yang konsisten.
+    * Menambahkan migrasi untuk `slug` pada tabel produk untuk URL yang SEO-friendly.
+
+3.  **Fitur Keranjang Belanja (Shopping Cart)**
+    * Membuat `CartController` untuk mengelola fungsionalitas keranjang berbasis *session*.
+    * Implementasi method `add`, `update`, dan `remove` item dari keranjang.
+    * Membuat view `keranjang/index.blade.php` untuk menampilkan isi keranjang.
+    * Menambahkan *middleware* `auth` pada route `cart.add` dan memodifikasi `Authenticate.php` untuk memberikan pesan error jika pengguna belum login.
+
+4.  **Proses Checkout & Pesanan**
+    * Membuat migrasi untuk tabel `orders` dan `order_items`.
+    * Membuat `CheckoutController` untuk menampilkan halaman checkout dan memproses pesanan.
+    * Logika `placeOrder` di `CheckoutController` untuk menyimpan data pesanan, mengurangi stok, dan membersihkan keranjang.
+    * Membuat view `checkout/index.blade.php` dengan form detail pengiriman dan ringkasan pesanan.
+
+5.  **Riwayat & Lacak Pesanan Pengguna**
+    * Membuat `UserOrderController` untuk menangani halaman riwayat pesanan dan detail pelacakan.
+    * Membuat view `riwayat/index.blade.php` dan `riwayat/tracking.blade.php`.
+
+---
+
+### **FASE 3 | TANGGAL 11 - 15 Oktober**
+
+1.  **Inisialisasi Panel Admin**
+    * Membuat middleware `IsAdmin` untuk memproteksi route khusus admin.
+    * Mendaftarkan middleware `is_admin` di `app/Http/Kernel.php`.
+    * Membuat layout utama untuk panel admin (`admin/layouts/app.blade.php`) dan sidebar (`admin/layouts/sidebar.blade.php`).
+    * Membuat `Admin/DashboardController` dengan data analitik dasar (total pendapatan, pesanan, pelanggan).
+
+2.  **Manajemen CRUD oleh Admin**
+    * **Produk**: Membuat `AdminProductController` dengan fungsionalitas CRUD (Create, Read, Update, Delete) untuk produk. View: `index`, `create`, `edit`.
+    * **Kategori**: Membuat `AdminCategoryController` untuk CRUD kategori. View: `index`, `create`, `edit`.
+    * **Pengguna**: Membuat `AdminUserController` untuk mengelola data pengguna (admin & pelanggan). View: `index`, `create`, `edit`, `show`.
+    * **Pesanan**: Membuat `AdminOrderController` untuk melihat daftar pesanan dan detailnya, serta memperbarui status pesanan & nomor resi. View: `index`, `show`.
+    * **Artikel Blog**: Membuat `Admin/PostController` untuk CRUD artikel blog. View: `index`, `create`, `edit`.
+
+3.  **Fitur Wishlist & Ulasan**
+    * **Wishlist**: Membuat model `Wishlist` dan migrasinya, serta `WishlistController` untuk logika tambah/hapus wishlist.
+    * **Ulasan**: Membuat model `Review` dan migrasinya, serta `ReviewController` untuk memungkinkan pengguna menulis ulasan pada produk yang telah dibeli.
+
+4.  **Sistem Promo & Diskon**
+    * Membuat model `Promotion` dan migrasinya.
+    * Membuat `Admin/PromotionController` untuk CRUD data promo.
+    * Menambahkan logika `applyPromo` dan `removePromo` di `CheckoutController`.
+
+5.  **Program Loyalitas (Poin & Tier)**
+    * Menambahkan kolom `loyalty_points` dan `tier` ke tabel `users` melalui migrasi.
+    * Implementasi logika penambahan poin saat pesanan selesai dan penggunaan poin saat checkout di `CheckoutController`.
+    * Implementasi logika penentuan `tier` berdasarkan total belanja.
+
+6.  **Manajemen Pengembalian (Return)**
+    * Membuat model `ReturnRequest` dan migrasinya.
+    * Membuat `ReturnRequestController` untuk pelanggan mengajukan pengembalian.
+    * Membuat `Admin/ReturnRequestController` untuk admin meninjau dan memperbarui status pengembalian.
+
+---
+
+### **FASE 4 | TANGGAL 16 - 20 Oktober**
+
+1.  **Implementasi Varian Produk (Ukuran & Stok)**
+    * Membuat migrasi untuk tabel `product_variants` dan menghapus kolom `stock_quantity` dari tabel `products`.
+    * Menyesuaikan `AdminProductController` (`store` & `update`) untuk mengelola varian.
+    * Memperbarui `CartController` dan `CheckoutController` untuk menangani produk dengan varian ukuran dan mengurangi stok dari varian yang benar.
+    * Memperbarui halaman detail produk (`katalog/show.blade.php`) dan form admin produk untuk mendukung input varian dinamis menggunakan Alpine.js.
+
+2.  **Login via Google (Socialite)**
+    * Instalasi Laravel Socialite.
+    * Menambahkan kolom `provider_name` dan `provider_id` ke tabel `users`.
+    * Membuat `SocialiteController` untuk menangani *redirect* dan *callback* dari Google.
+    * Menambahkan tombol "Login dengan Google" pada halaman login.
+
+3.  **Modul CRM (Customer Relationship Management)**
+    * Membuat `Admin/CrmController` untuk menampilkan daftar pelanggan dengan data agregat (total pesanan, total belanja).
+    * Membuat model `UserInteraction` dan migrasinya untuk mencatat interaksi admin dengan pelanggan.
+    * Membuat halaman detail pelanggan di CRM untuk melihat riwayat pesanan dan menambahkan catatan interaksi.
+
+4.  **Sistem Pesan (Chat) Pelanggan & Admin**
+    * Membuat model `Conversation` dan `Message` beserta migrasinya.
+    * Membuat `ChatController` untuk sisi pelanggan, memungkinkan mereka memulai percakapan terkait produk dan membalas pesan.
+    * Membuat `Admin/AdminChatController` untuk admin melihat semua percakapan dan membalas pesan dari pelanggan.
+
+5.  **Fitur Marketing (Email Campaign)**
+    * Menambahkan kolom preferensi notifikasi (`notif_promo`, `notif_order_updates`) pada tabel `users`.
+    * Membuat `Admin/CampaignController` untuk mengirim email promosi massal kepada pelanggan yang setuju.
+    * Membuat Mailable `PromotionalEmail` dan template emailnya.
+
+6.  **Pengaturan Dinamis Website**
+    * Membuat model `Setting` dan migrasinya untuk menyimpan konfigurasi website (nama situs, email, dll.).
+    * Membuat `Admin/SettingsController` untuk mengelola pengaturan ini dari panel admin.
+    * Menggunakan `AppServiceProvider` untuk membagikan data pengaturan ke semua view, sehingga data seperti nama situs dan info kontak menjadi dinamis.
+
+7.  **Manajemen Pengiriman & Pembayaran**
+    * Membuat model dan migrasi untuk `ShippingMethod` dan `PaymentMethod`.
+    * Membuat `Admin/ShippingController` dan `Admin/PaymentMethodController` untuk CRUD metode pengiriman dan pembayaran.
+    * Mengintegrasikan pilihan metode ini secara dinamis di halaman `checkout/index.blade.php`.
+
+8.  **Laporan & Analitik**
+    * Membuat `Admin/ReportController` untuk menghasilkan laporan penjualan berdasarkan rentang tanggal.
+    * Menampilkan data agregat (total pendapatan, pesanan, item terjual), tren pendapatan harian (grafik garis), komposisi pendapatan per kategori (grafik donat), dan produk terlaris.
+    * Menambahkan fungsionalitas untuk mencetak laporan ke dalam format PDF.
