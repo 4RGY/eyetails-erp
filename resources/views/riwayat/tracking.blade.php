@@ -57,8 +57,14 @@
                 <div class="block-content">
                     @foreach($order->items as $item)
                     <div class="product-item">
+                        {{-- PERBAIKAN: Menambahkan class="product-image" --}}
+                        @if($item->product && $item->product->primary_image)
+                        <img src="{{ asset('storage/' . $item->product->primary_image) }}"
+                            alt="{{ $item->product_name }}" class="product-image">
+                        @else
                         <img src="https://via.placeholder.com/80x100/F0F0F0?text=Produk" alt="{{ $item->product_name }}"
                             class="product-image">
+                        @endif
                         <div class="product-info">
                             <span class="product-name">{{ $item->product_name }}</span>
 
@@ -141,6 +147,7 @@
         color: #6c757d;
         margin: 5px 0;
     }
+
     .order-detail-layout {
         display: grid;
         grid-template-columns: 2fr 1fr;

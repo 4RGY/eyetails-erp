@@ -17,8 +17,7 @@ class Product extends Model
         'description',
         'price',
         'sale_price',
-        'sku',
-        'image'
+        'sku'
     ];
 
     /**
@@ -28,6 +27,17 @@ class Product extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
+
+    public function getPrimaryImageAttribute()
+    {
+        // Mengambil path gambar pertama, atau null jika tidak ada gambar.
+        return $this->images->first()->path ?? null;
     }
 
     public function category()

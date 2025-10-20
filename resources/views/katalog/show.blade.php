@@ -39,12 +39,34 @@
     }">
         {{-- Galeri Produk --}}
         <div class="product-gallery">
-            @if($product->image)
-            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="main-product-image">
-            @else
-            <img src="https://via.placeholder.com/600x800/F0F0F0?text={{ urlencode($product->name) }}"
-                alt="{{ $product->name }}" class="main-product-image">
-            @endif
+            <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: var(--primary-accent)"
+                class="swiper main-image-swiper">
+                <div class="swiper-wrapper">
+                    @forelse($product->images as $image)
+                    <div class="swiper-slide">
+                        <img src="{{ asset('storage/' . $image->path) }}"
+                            alt="{{ $product->name }} image {{ $loop->iteration }}">
+                    </div>
+                    @empty
+                    <div class="swiper-slide">
+                        <img src="https://via.placeholder.com/600x600/F0F0F0?text=No+Image" alt="No image available">
+                    </div>
+                    @endforelse
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        
+            <div thumbsSlider="" class="swiper thumbnail-swiper">
+                <div class="swiper-wrapper">
+                    @foreach($product->images as $image)
+                    <div class="swiper-slide">
+                        <img src="{{ asset('storage/' . $image->path) }}"
+                            alt="{{ $product->name }} thumbnail {{ $loop->iteration }}">
+                    </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
 
         {{-- Info Produk --}}
@@ -65,7 +87,7 @@
                     </p>
             </div>
             <div class="product-description">
-                <p>{{ $product->description }}</p>
+                <p>{!! nl2br(e($product->description)) !!}</p>
             </div>
             <form action="{{ route('cart.add', $product->slug) }}" method="POST" class="add-to-cart-form">
                 @csrf
@@ -179,7 +201,7 @@
     </div>
     <div class="modal-body">
         <div class="modal-product-info">
-            <img src="{{ $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/80x100' }}"
+            <img src="{{ $product->primary_image ? asset('storage/' . $product->primary_image) : 'https://via.placeholder.com/80x100' }}"
                 alt="{{ $product->name }}">
             <div>
                 <p><strong>{{ $product->name }}</strong></p>
@@ -206,6 +228,70 @@
     /* Halaman Detail Produk */
     .product-detail-page {
         padding: 2rem 0 4rem 0;
+    }
+
+    product-detail-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+    }
+    
+    /* Styling untuk galeri gambar */
+    .product-gallery {
+    width: 100%;
+    max-width: 550px; /* Batas lebar maks galeri */
+    }
+    
+    .main-image-swiper {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    }
+    .main-image-swiper .swiper-slide {
+    aspect-ratio: 1 / 1; /* Membuat gambar utama selalu kotak */
+    }
+    .main-image-swiper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    }
+    
+    /* Styling untuk thumbnail navigasi */
+    .thumbnail-swiper {
+    margin-top: 1rem;
+    padding: 5px; /* Sedikit padding agar border tidak terpotong */
+    }
+    .thumbnail-swiper .swiper-slide {
+    width: 25%;
+    height: 100px;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    border-radius: 8px;
+    overflow: hidden;
+    }
+    .thumbnail-swiper .swiper-slide:hover {
+    opacity: 1;
+    }
+    .thumbnail-swiper .swiper-slide-thumb-active {
+    opacity: 1;
+    border: 2px solid var(--primary-accent, #4f46e5);
+    }
+    .thumbnail-swiper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    }
+    
+    /* Styling untuk info produk */
+    .product-info-details h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
     }
 
     .breadcrumb {
@@ -591,6 +677,30 @@
 
 @push('scripts')
 {{-- Script untuk modal (tidak berubah) --}}
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Inisialisasi slider thumbnail
+        var thumbsSwiper = new Swiper(".thumbnail-swiper", {
+            spaceBetween: 10,
+            slidesPerView: 4, // Tampilkan 4 thumbnail sekaligus
+            freeMode: true,
+            watchSlidesProgress: true,
+        });
+
+        // Inisialisasi slider utama dan hubungkan dengan thumbnail
+        var mainSwiper = new Swiper(".main-image-swiper", {
+            spaceBetween: 10,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            thumbs: {
+                swiper: thumbsSwiper,
+            },
+        });
+    });
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         @auth

@@ -5,7 +5,7 @@
 @section('content')
 <header class="admin-content-header">
     <h1>Edit Metode Pengiriman</h1>
-    <p>Perbarui detail untuk metode pengiriman "{{ $shippingMethod->name }}".</p>
+    <p>Perbarui detail untuk metode pengiriman "{{ $shippingOption->name }}".</p>
 </header>
 
 <div class="admin-card">
@@ -21,20 +21,22 @@
         </div>
         @endif
 
-        <form action="{{ route('admin.shipping.update', $shippingMethod->id) }}" method="POST"
+        {{-- KESALAHAN ADA DI BARIS INI, CLASS SEHARUSNYA DI DALAM TAG FORM --}}
+        <form action="{{ route('admin.shipping.update', $shippingOption->id) }}" method="POST"
             class="admin-form modern-form">
             @csrf
             @method('PUT') {{-- Method PUT untuk proses update --}}
+
             <div class="form-row">
                 <div class="form-group">
                     <label for="name">Nama Layanan</label>
                     <input type="text" name="name" id="name" class="form-control"
-                        value="{{ old('name', $shippingMethod->name) }}" required>
+                        value="{{ old('name', $shippingOption->name) }}" required>
                 </div>
                 <div class="form-group">
                     <label for="cost">Biaya (Rp)</label>
                     <input type="number" name="cost" id="cost" class="form-control"
-                        value="{{ old('cost', $shippingMethod->cost) }}" required>
+                        value="{{ old('cost', $shippingOption->cost) }}" required>
                 </div>
             </div>
 
@@ -42,7 +44,7 @@
                 <div class="form-group full-width">
                     <label for="description">Deskripsi <small>(Opsional)</small></label>
                     <textarea name="description" id="description" rows="3"
-                        class="form-control">{{ old('description', $shippingMethod->description) }}</textarea>
+                        class="form-control">{{ old('description', $shippingOption->description) }}</textarea>
                 </div>
             </div>
 
@@ -50,9 +52,10 @@
                 <div class="form-group">
                     <label>Status</label>
                     <div class="form-check">
+                        {{-- Hidden input untuk memastikan nilai 0 dikirim jika checkbox tidak dicentang --}}
                         <input type="hidden" name="is_active" value="0">
                         <input type="checkbox" name="is_active" id="is_active" class="form-check-input" value="1" {{
-                            old('is_active', $shippingMethod->is_active) ? 'checked' : '' }}>
+                            old('is_active', $shippingOption->is_active) ? 'checked' : '' }}>
                         <label for="is_active" class="form-check-label">Aktifkan metode pengiriman ini</label>
                     </div>
                 </div>

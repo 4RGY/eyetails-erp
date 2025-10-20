@@ -29,8 +29,8 @@
                 <div class="item-preview-container">
                     @foreach($order->items->take(4) as $item) {{-- Ambil maks 4 gambar --}}
                     <div class="item-preview">
-                        @if($item->product && $item->product->image)
-                        <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product_name }}">
+                        @if($item->product && $item->product->primary_image)
+                        <img src="{{ asset('storage/' . $item->product->primary_image) }}" alt="{{ $item->product_name }}">
                         @else
                         <img src="https://via.placeholder.com/80x100/F0F0F0?text=Produk"
                             alt="{{ $item->product_name }}">

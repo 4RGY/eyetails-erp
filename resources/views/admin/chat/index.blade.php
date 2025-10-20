@@ -58,7 +58,7 @@
 
     @if($conversations->hasPages())
     <div class="admin-card-footer">
-        {{ $conversations->links() }}
+        {{ $conversations->links('vendor.pagination.semantic-ui') }}
     </div>
     @endif
 </div>

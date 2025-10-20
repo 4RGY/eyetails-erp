@@ -46,8 +46,8 @@
                 <tr>
                     <td data-label="Produk">
                         <div class="product-info-cell">
-                            @if($product->image)
-                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                            @if($product->primary_image)
+                            <img src="{{ asset('storage/' . $product->primary_image) }}" alt="{{ $product->name }}"
                                 class="product-thumbnail">
                             @else
                             <img src="https://via.placeholder.com/60x60/F0F0F0?text=No+Img" alt="No Image"
@@ -114,7 +114,7 @@
 
     @if($products->hasPages())
     <div class="admin-card-footer">
-        {{ $products->links() }}
+        {{ $products->links('vendor.pagination.semantic-ui') }}
     </div>
     @endif
 </div>
@@ -124,6 +124,72 @@
 <style>
     /* ... (CSS umum lainnya seperti alert, header, dll) ... */
 
+    /* === PAGINATION STYLES === */
+    .pagination {
+    display: flex;
+    justify-content: flex-end; /* Posisi di kanan */
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    }
+    
+    .pagination .page-item {
+    margin: 0 4px;
+    }
+    
+    .pagination .page-link,
+    .pagination .page-item.disabled .page-link,
+    .pagination .page-item.active .page-link {
+    display: block;
+    padding: 8px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    text-decoration: none;
+    background-color: #fff;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    }
+    
+    .pagination .page-link:hover {
+    background-color: #f1f1f1;
+    border-color: #d1d1d1;
+    }
+    
+    .pagination .page-item.active .page-link {
+    background-color: var(--primary-accent);
+    color: white;
+    border-color: var(--primary-accent);
+    cursor: default;
+    }
+    
+    .pagination .page-item.disabled .page-link {
+    color: #9ca3af;
+    background-color: var(--admin-bg);
+    cursor: not-allowed;
+    opacity: 0.7;
+    }
+    
+    /* Mengganti teks "Previous" & "Next" bawaan Laravel */
+    .pagination .page-link[rel="prev"]::after {
+    content: ' Sebelumnya';
+    }
+    
+    .pagination .page-link[rel="next"]::before {
+    content: 'Berikutnya ';
+    }
+    
+    .pagination .page-link[rel="prev"],
+    .pagination .page-link[rel="next"] {
+    font-weight: 600;
+    }
+    
+    /* Menghilangkan panah bawaan */
+    .pagination .page-item:first-child .page-link,
+    .pagination .page-item:last-child .page-link {
+    padding: 8px 14px;
+    }
+    
     .alert {
         padding: 1rem;
         margin: 1rem 0;

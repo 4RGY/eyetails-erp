@@ -6,78 +6,81 @@
 <header class="admin-content-header">
     <h1>Manajemen Pengiriman</h1>
     <p>Kelola semua metode pengiriman dan biaya yang tersedia untuk pelanggan.</p>
+    <div class="header-actions">
+        <a href="{{ route('admin.shipping.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Tambah Metode
+        </a>
+    </div>
 </header>
 
 <div class="admin-card">
-    <div class="admin-card-header-with-button">
-        <h2>Daftar Metode Pengiriman</h2>
-        <a href="{{ route('admin.shipping.create') }}" class="btn btn-primary">
-            <i class="fa-solid fa-plus"></i> Tambah Metode
-        </a>
-    </div>
+    <div class="admin-card-body">
+        @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
 
-    @if(session('success'))
-    <div class="alert alert-success">
-        <i class="fa-solid fa-check-circle"></i>
-        {{ session('success') }}
-    </div>
-    @endif
+        {{-- Wrapper untuk tabel agar bisa scroll horizontal di layar kecil --}}
+        <div class="admin-table-container">
+            {{-- Mengganti class 'table' menjadi 'modern-table' agar sesuai dengan CSS --}}
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Nama Layanan</th>
+                        <th>Deskripsi</th>
+                        <th>Biaya</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($shippingOptions as $shippingOption)
+                    <tr>
+                        {{-- Menambahkan atribut data-label untuk tampilan responsif --}}
+                        <td data-label="Nama Layanan"><strong>{{ $shippingOption->name }}</strong></td>
+                        <td data-label="Deskripsi">{{ $shippingOption->description ?? '-' }}</td>
+                        <td data-label="Biaya">Rp {{ number_format($shippingOption->cost, 0, ',', '.') }}</td>
+                        <td data-label="Status">
+                            {{-- Menggunakan class dari CSS baru --}}
+                            @if ($shippingOption->is_active)
+                            <span class="status-badge status-available">Aktif</span>
+                            @else
+                            <span class="status-badge status-out">Tidak Aktif</span>
+                            @endif
+                        </td>
+                        <td data-label="Aksi">
+                            <div class="action-buttons">
+                                {{-- Menggunakan class dari CSS baru --}}
+                                <a href="{{ route('admin.shipping.edit', $shippingOption->id) }}"
+                                    class="btn-action btn-edit" title="Edit">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <form action="{{ route('admin.shipping.destroy', $shippingOption->id) }}" method="POST"
+                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus metode ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-action btn-delete" title="Hapus">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="text-center">Belum ada metode pengiriman yang ditambahkan.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-    <div class="admin-table-container">
-        <table class="admin-table modern-table">
-            <thead>
-                <tr>
-                    <th>Nama Layanan</th>
-                    <th>Deskripsi</th>
-                    <th>Biaya</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($shippingMethods as $method)
-                <tr>
-                    <td data-label="Nama Layanan">
-                        <strong>{{ $method->name }}</strong>
-                    </td>
-                    <td data-label="Deskripsi">{{ $method->description ?? '-' }}</td>
-                    <td data-label="Biaya">Rp {{ number_format($method->cost, 0, ',', '.') }}</td>
-                    <td data-label="Status">
-                        @if($method->is_active)
-                        <span class="status-badge status-available">Aktif</span>
-                        @else
-                        <span class="status-badge status-out">Nonaktif</span>
-                        @endif
-                    </td>
-                    <td data-label="Aksi">
-                        <div class="action-buttons">
-                            <a href="{{ route('admin.shipping.edit', $method->id) }}" class="btn-action btn-edit"
-                                title="Edit"><i class="fa-solid fa-pencil-alt"></i></a>
-                            <form action="{{ route('admin.shipping.destroy', $method->id) }}" method="POST"
-                                onsubmit="return confirm('Anda yakin ingin menghapus metode pengiriman ini?');"
-                                style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-action btn-delete" title="Hapus"><i
-                                        class="fa-solid fa-trash-alt"></i></button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="5" class="text-center p-4">Belum ada metode pengiriman yang ditambahkan.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+        <div class="admin-card-footer">
+            {{-- Menggunakan pagination yang lebih sesuai dengan style custom --}}
+            {{ $shippingOptions->links('vendor.pagination.semantic-ui') }}
+        </div>
     </div>
-
-    @if($shippingMethods->hasPages())
-    <div class="admin-card-footer">
-        {{ $shippingMethods->links() }}
-    </div>
-    @endif
 </div>
 @endsection
 
@@ -86,7 +89,8 @@
     /* Menggunakan style yang konsisten dengan modul lain */
     .alert {
         padding: 1rem;
-        margin: 1rem 0;
+        margin-bottom: 1.5rem;
+        /* Menambah margin bawah */
         border-radius: 6px;
         display: flex;
         align-items: center;
@@ -100,12 +104,8 @@
         border: 1px solid #b3e6d1;
     }
 
-    .admin-card-header-with-button {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 20px;
-        border-bottom: 1px solid var(--border-color);
+    .header-actions {
+        margin-top: 1rem;
     }
 
     .btn-primary {
@@ -115,6 +115,16 @@
         border-radius: 5px;
         text-decoration: none;
         font-weight: 600;
+        display: inline-flex;
+        /* Menjaga layout icon dan teks */
+        align-items: center;
+        gap: 8px;
+        transition: background-color 0.2s;
+    }
+
+    .btn-primary:hover {
+        background-color: #4338ca;
+        /* Warna sedikit lebih gelap saat hover */
     }
 
     /* Desain Tabel Modern & Responsif */
@@ -170,6 +180,7 @@
     .action-buttons {
         display: flex;
         gap: 0.5rem;
+        align-items: center;
     }
 
     .btn-action {
@@ -184,6 +195,7 @@
         cursor: pointer;
         font-size: 0.9rem;
         transition: transform 0.2s, opacity 0.2s;
+        text-decoration: none;
     }
 
     .btn-action:hover {
@@ -201,7 +213,8 @@
 
     .admin-card-footer {
         padding: 15px 20px;
-        border-top: 1px solid var(--border-color);
+        border-top: 1px solid var(--border-color, #e5e7eb);
+        margin-top: 1rem;
     }
 
     /* RESPONSIVE: Mengubah Tabel jadi Card di Mobile */
@@ -222,6 +235,8 @@
             border: 1px solid #e9ecef;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            /* Mencegah konten keluar dari border-radius */
         }
 
         .modern-table td {

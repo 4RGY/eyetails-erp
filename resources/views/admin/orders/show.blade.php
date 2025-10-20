@@ -45,8 +45,8 @@
                                 {{-- =============================================== --}}
                                 <div class="product-cell">
                                     <div class="product-cell-image">
-                                        @if($item->product && $item->product->image)
-                                        <img src="{{ asset('storage/' . $item->product->image) }}"
+                                        @if($item->product && $item->product->primary_image)
+                                        <img src="{{ asset('storage/' . $item->product->primary_image) }}"
                                             alt="{{ $item->product_name }}">
                                         @else
                                         <img src="https://via.placeholder.com/80x100/F0F0F0?text=Produk"

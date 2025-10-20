@@ -73,7 +73,7 @@
 
     @if($categories->hasPages())
     <div class="admin-card-footer">
-        {{ $categories->links() }}
+        {{ $categories->links('vendor.pagination.semantic-ui') }}
     </div>
     @endif
 </div>

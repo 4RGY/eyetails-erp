@@ -4,8 +4,9 @@
 
 @section('content')
 <header class="admin-content-header">
+    {{-- Menggunakan variabel $payment --}}
     <h1>Edit Metode Pembayaran</h1>
-    <p>Perbarui detail untuk metode "{{ $paymentMethod->name }}".</p>
+    <p>Perbarui detail untuk metode pembayaran "{{ $payment->name }}".</p>
 </header>
 
 <div class="admin-card">
@@ -21,28 +22,28 @@
         </div>
         @endif
 
-        <form action="{{ route('admin.payments.update', $paymentMethod->id) }}" method="POST"
-            class="admin-form modern-form">
+        {{-- Menggunakan variabel $payment untuk route --}}
+        <form action="{{ route('admin.payments.update', $payment) }}" method="POST" class="admin-form modern-form">
             @csrf
             @method('PUT')
             <div class="form-row">
                 <div class="form-group">
                     <label for="name">Nama Metode</label>
                     <input type="text" name="name" id="name" class="form-control"
-                        value="{{ old('name', $paymentMethod->name) }}" required>
+                        value="{{ old('name', $payment->name) }}" required>
                 </div>
                 <div class="form-group">
                     <label for="code">Kode Unik</label>
                     <input type="text" name="code" id="code" class="form-control"
-                        value="{{ old('code', $paymentMethod->code) }}" required>
+                        value="{{ old('code', $payment->code) }}" required>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group full-width">
-                    <label for="description">Deskripsi / Instruksi Pembayaran</label>
-                    <textarea name="description" id="description" rows="4"
-                        class="form-control">{{ old('description', $paymentMethod->description) }}</textarea>
+                    <label for="description">Deskripsi <small>(Opsional)</small></label>
+                    <textarea name="description" id="description" rows="3"
+                        class="form-control">{{ old('description', $payment->description) }}</textarea>
                 </div>
             </div>
 
@@ -52,7 +53,7 @@
                     <div class="form-check">
                         <input type="hidden" name="is_active" value="0">
                         <input type="checkbox" name="is_active" id="is_active" class="form-check-input" value="1" {{
-                            old('is_active', $paymentMethod->is_active) ? 'checked' : '' }}>
+                            old('is_active', $payment->is_active) ? 'checked' : '' }}>
                         <label for="is_active" class="form-check-label">Aktifkan metode pembayaran ini</label>
                     </div>
                 </div>

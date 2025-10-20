@@ -148,6 +148,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'is_admin'])->group(
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // ROUTE BARU UNTUK CRUD PRODUK
     Route::resource('products', AdminProductController::class);
+    // routes/web.php (di dalam grup admin)
+    Route::delete('/products/images/{imageId}', [AdminProductController::class, 'destroyImage'])->name('products.images.destroy');
     Route::resource('users', AdminUserController::class);
     Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
@@ -164,7 +166,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'is_admin'])->group(
     ]);
     Route::get('campaigns/create', [CampaignController::class, 'create'])->name('campaigns.create');
     Route::post('campaigns/send', [CampaignController::class, 'send'])->name('campaigns.send');
-    Route::resource('shipping', ShippingController::class)->except(['show']);
+    Route::resource('shipping', ShippingController::class)
+        ->except(['show'])
+        ->parameters(['shipping' => 'shippingOption']);
     Route::resource('payments', PaymentMethodController::class)->except(['show']);
     Route::prefix('crm')->name('crm.')->group(function () {
         Route::get('/', [CrmController::class, 'index'])->name('index');
