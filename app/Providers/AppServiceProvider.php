@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Order;
 use App\Models\Setting;
 use App\Models\Promotion;
@@ -24,9 +25,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // ✅ Only run this after 'settings' table exists
+        if (Schema::hasTable('settings')) {
+            $dbSettings = Setting::pluck('value', 'key')->toArray();
+        } else {
+            $dbSettings = [];
+        }
 
-        // Composer untuk semua view, berbagi data settings
-        $dbSettings = Setting::pluck('value', 'key')->toArray();
         $defaultSettings = [
             'site_name' => 'Eyetails.co',
             'default_email' => 'support@eyetails.co',
@@ -35,11 +40,11 @@ class AppServiceProvider extends ServiceProvider
             'logo_path' => null,
             'favicon_path' => null,
         ];
+
         $settings = array_merge($defaultSettings, $dbSettings);
         View::share('siteSettings', $settings);
-        
+
         // Composer untuk layout sisi PENGGUNA (layouts.app)
-        // Menyediakan data promosi yang sedang aktif.
         View::composer('layouts.app', function ($view) {
             $activePromotions = Promotion::where('is_active', true)
                 ->where(function ($query) {
@@ -56,7 +61,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Composer untuk layout sisi ADMIN (admin.layouts.sidebar)
-        // Menyediakan data jumlah pesanan yang pending untuk notifikasi.
         View::composer('admin.layouts.sidebar', function ($view) {
             $pendingOrdersCount = Order::where('order_status', 'Pending')->count();
             $view->with('pendingOrdersCount', $pendingOrdersCount);

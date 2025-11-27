@@ -24,7 +24,7 @@
                 berkelanjutan dan membangun komunitas yang kuat melalui pengalaman digital yang terintegrasi penuh.</p>
         </div>
         <div class="story-visual">
-            <img src="https://images.unsplash.com/photo-1516762689617-e1cff2436f1c?fit=crop&w=800&q=80"
+            <img src="https://plus.unsplash.com/premium_photo-1664202526075-7436b5325ef3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
                 alt="Visi Perusahaan">
         </div>
     </div>

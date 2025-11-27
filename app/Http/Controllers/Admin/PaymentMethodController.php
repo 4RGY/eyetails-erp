@@ -8,79 +8,57 @@ use Illuminate\Http\Request;
 
 class PaymentMethodController extends Controller
 {
-    /**
-     * Menampilkan daftar semua metode pembayaran.
-     */
     public function index()
     {
+        // Mengirim variabel $paymentMethods ke view
         $paymentMethods = PaymentMethod::latest()->paginate(10);
         return view('admin.payments.index', compact('paymentMethods'));
     }
 
-    /**
-     * Menampilkan form untuk membuat metode pembayaran baru.
-     */
     public function create()
     {
         return view('admin.payments.create');
     }
 
-    /**
-     * Menyimpan metode pembayaran baru ke database.
-     */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:50|unique:payment_methods,code',
             'description' => 'nullable|string',
-            'is_active' => 'boolean',
+            'is_active' => 'sometimes|boolean',
         ]);
-
-        $validatedData['is_active'] = $request->has('is_active');
-
-        PaymentMethod::create($validatedData);
-
-        return redirect()->route('admin.payments.index')
-            ->with('success', 'Metode pembayaran baru berhasil ditambahkan.');
+        $validated['is_active'] = $request->has('is_active');
+        PaymentMethod::create($validated);
+        return redirect()->route('admin.payments.index')->with('success', 'Metode pembayaran berhasil dibuat.');
     }
 
-    /**
-     * Menampilkan form untuk mengedit metode pembayaran.
-     */
-    public function edit(PaymentMethod $paymentMethod)
+    // PENTING: Menggunakan variabel $payment agar cocok dengan route {payment}
+    public function edit(PaymentMethod $payment)
     {
-        return view('admin.payments.edit', compact('paymentMethod'));
+        // Mengirim variabel 'payment' ke view
+        return view('admin.payments.edit', compact('payment'));
     }
 
-    /**
-     * Memperbarui data metode pembayaran di database.
-     */
-    public function update(Request $request, PaymentMethod $paymentMethod)
+    // PENTING: Menggunakan variabel $payment agar cocok dengan route {payment}
+    public function update(Request $request, PaymentMethod $payment)
     {
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:payment_methods,code,' . $paymentMethod->id,
+            'code' => 'required|string|max:50|unique:payment_methods,code,' . $payment->id,
             'description' => 'nullable|string',
-            'is_active' => 'boolean',
+            'is_active' => 'required|boolean',
         ]);
 
-        $validatedData['is_active'] = $request->has('is_active');
+        $payment->update($validated);
 
-        $paymentMethod->update($validatedData);
-
-        return redirect()->route('admin.payments.index')
-            ->with('success', 'Metode pembayaran berhasil diperbarui.');
+        return redirect()->route('admin.payments.index')->with('success', 'Metode pembayaran berhasil diperbarui.');
     }
 
-    /**
-     * Menghapus metode pembayaran dari database.
-     */
-    public function destroy(PaymentMethod $paymentMethod)
+    // PENTING: Menggunakan variabel $payment agar cocok dengan route {payment}
+    public function destroy(PaymentMethod $payment)
     {
-        $paymentMethod->delete();
-
-        return redirect()->route('admin.payments.index')
-            ->with('success', 'Metode pembayaran berhasil dihapus.');
+        $payment->delete();
+        return redirect()->route('admin.payments.index')->with('success', 'Metode pembayaran berhasil dihapus.');
     }
 }

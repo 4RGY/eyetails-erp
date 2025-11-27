@@ -8,6 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'slug',
+        'image_path', // Kolom ini ditambahkan agar bisa diisi dari controller
+    ];
+
+    /**
+     * Mendefinisikan relasi "one-to-many" ke model Product.
+     * Satu kategori bisa memiliki banyak produk.
+     */
     public function products()
     {
         return $this->hasMany(Product::class);

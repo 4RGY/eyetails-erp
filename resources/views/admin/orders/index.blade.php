@@ -51,11 +51,7 @@
                             <span class="item-count">{{ $order->items->count() }} Item</span>
                             <small class="first-item">
                                 @if($order->items->first())
-                                {{ $order->items->first()->product_name }}
-                                @if($order->items->first()->size)
-                                (Size: {{ $order->items->first()->size }})
-                                @endif
-                                ...
+                                {{ $order->items->first()->product_name }}...
                                 @endif
                             </small>
                         </div>
@@ -85,17 +81,18 @@
     </div>
 
     @if($orders->hasPages())
-    <div class="admin-card-footer pagination-footer">
-        {{ $orders->links() }}
+    <div class="admin-card-footer">
+        {{ $orders->links('vendor.pagination.semantic-ui') }}
     </div>
     @endif
 </div>
 
 @push('styles')
 <style>
+    /* ... CSS untuk .alert, .modern-table, .order-status, dll. tetap sama ... */
     .alert {
         padding: 1rem;
-        margin: 1rem;
+        margin: 0 20px 20px;
         border-radius: 6px;
         display: flex;
         align-items: center;
@@ -119,31 +116,35 @@
     }
 
     .modern-table th {
-        padding: 1rem 1.5rem;
+        padding: 12px 20px;
         text-align: left;
         background-color: #f8f9fa;
         font-weight: 600;
         text-transform: uppercase;
         font-size: 0.8rem;
         color: #6c757d;
-        border-bottom: 2px solid #e9ecef;
+        border-bottom: 2px solid var(--border-color);
     }
 
     .modern-table td {
-        padding: 1rem 1.5rem;
+        padding: 15px 20px;
         text-align: left;
         vertical-align: middle;
-        border-bottom: 1px solid #e9ecef;
-        color: #343a40;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .modern-table tbody tr:last-child td {
+        border-bottom: none;
     }
 
     .modern-table tbody tr:hover {
         background-color: #f8f9fa;
     }
 
-    /* Detail Tambahan di Tabel */
     .order-id {
         font-weight: 700;
+        color: var(--primary-accent);
     }
 
     .customer-info-cell {
@@ -171,12 +172,12 @@
         display: block;
     }
 
-    /* Status Badge */
     .order-status {
         padding: 5px 12px;
         border-radius: 20px;
         font-weight: 600;
         font-size: 0.8rem;
+        text-transform: capitalize;
     }
 
     .status-pending {
@@ -204,11 +205,10 @@
         color: #721c24;
     }
 
-    /* Tombol Aksi */
     .btn-action {
         width: 36px;
         height: 36px;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         border-radius: 50%;
@@ -217,7 +217,7 @@
         cursor: pointer;
         font-size: 0.9rem;
         text-decoration: none;
-        transition: transform 0.2s;
+        transition: transform 0.2s, background-color 0.2s;
     }
 
     .btn-action:hover {
@@ -225,144 +225,127 @@
     }
 
     .btn-view {
-        background-color: #0d6efd;
+        background-color: var(--primary-accent);
     }
 
-    /* === PAGINATION STYLING - FIXED === */
-    .pagination-footer {
+    .btn-view:hover {
+        background-color: #4338ca;
+    }
+
+    /* === PAGINATION STYLING (FINAL) === */
+    .admin-card-footer {
         padding: 15px 20px;
-        border-top: 1px solid #e9ecef;
-        display: block;
+        border-top: 1px solid var(--border-color);
     }
 
-    /* Sembunyikan teks "Showing 1 to 15 of 16 results" */
-    .pagination-footer nav>div:first-child {
-        display: none !important;
-    }
-
-    .pagination-footer nav>div:last-child {
-        display: none !important;
-    }
-
-    /* Tampilkan hanya pagination links */
-    .pagination-footer nav>div:nth-child(2) {
-        display: flex !important;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 5px;
-    }
-
-    /* Sembunyikan semua SVG arrow */
-    .pagination-footer svg {
-        display: none !important;
-    }
-
-    /* Style untuk pagination list */
-    .pagination-footer nav ul {
+    .pagination {
         display: flex;
+        justify-content: flex-end;
         list-style: none;
         padding: 0;
         margin: 0;
-        gap: 5px;
     }
 
-    .pagination-footer nav ul li {
-        list-style: none;
+    .pagination .page-item {
+        margin: 0 4px;
     }
 
-    /* Style untuk link pagination */
-    .pagination-footer a,
-    .pagination-footer span {
-        display: inline-flex;
+    .pagination .page-link,
+    .pagination .page-item.disabled .page-link,
+    .pagination .page-item.active .page-link {
+        display: flex;
         align-items: center;
         justify-content: center;
-        padding: 8px 12px;
         min-width: 40px;
-        height: 36px;
-        border: 1px solid #ddd;
+        height: 40px;
+        padding: 0 14px;
+        border: 1px solid var(--border-color);
         border-radius: 6px;
+        color: var(--text-primary);
         text-decoration: none;
-        color: #343a40;
-        background-color: white;
-        transition: all 0.2s;
-        font-size: 0.9rem;
+        background-color: #fff;
+        transition: all 0.2s ease;
         font-weight: 500;
+        font-size: 0.9rem;
     }
 
-    /* Halaman aktif */
-    .pagination-footer .active span {
-        background-color: #0d6efd;
+    .pagination .page-link:hover {
+        background-color: #f1f1f1;
+        border-color: #d1d1d1;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--primary-accent);
         color: white;
-        border-color: #0d6efd;
+        border-color: var(--primary-accent);
+        cursor: default;
     }
 
-    /* Hover effect */
-    .pagination-footer a:hover {
-        background-color: #f8f9fa;
-        border-color: #0d6efd;
-        color: #0d6efd;
-    }
-
-    /* Disabled state */
-    .pagination-footer .disabled span {
-        opacity: 0.5;
+    .pagination .page-item.disabled .page-link {
+        color: #9ca3af;
+        background-color: var(--admin-bg);
         cursor: not-allowed;
-        background-color: #f8f9fa;
     }
 
-    /* Tampilkan teks Previous dan Next */
-    .pagination-footer a[rel="prev"]::before {
-        content: "‹ ";
+    .pagination svg,
+    .dark\:text-gray-400 {
+        display: none !important;
     }
 
-    .pagination-footer a[rel="next"]::after {
-        content: " ›";
+    /* MODIFIKASI DI SINI */
+    .pagination .page-item:first-child .page-link::before {
+        content: '<< ';
+        /* Panah < dihapus */
     }
 
-    /* Responsive Table to Card */
+    .pagination .page-item:last-child .page-link::after {
+        content: ' >>';
+        /* Panah > dihapus */
+    }
+
+    /* === RESPONSIVE TABLE (CARD VIEW) === */
     @media (max-width: 992px) {
         .modern-table thead {
             display: none;
         }
 
-        .modern-table tr,
-        .modern-table td {
-            display: block;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
         .modern-table tr {
-            margin-bottom: 1rem;
-            border: 1px solid #e9ecef;
+            display: block;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .modern-table tbody tr:last-child {
+            margin-bottom: 0;
         }
 
         .modern-table td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             text-align: right;
-            padding-left: 50%;
-            position: relative;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .modern-table td:last-child {
             border-bottom: none;
         }
 
-        .modern-table td:before {
+        .modern-table td::before {
             content: attr(data-label);
-            position: absolute;
-            left: 1.5rem;
-            width: calc(50% - 2rem);
-            text-align: left;
             font-weight: 600;
             color: #6c757d;
             font-size: 0.8rem;
             text-transform: uppercase;
+            text-align: left;
+            margin-right: 1rem;
         }
 
-        .pagination-footer {
-            justify-content: flex-start;
+        .pagination {
+            justify-content: center;
         }
     }
 </style>

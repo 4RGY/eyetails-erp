@@ -5,79 +5,76 @@
 @section('content')
 <header class="admin-content-header">
     <h1>Manajemen Pembayaran</h1>
-    <p>Kelola semua metode pembayaran yang tersedia untuk pelanggan di halaman checkout.</p>
+    <p>Kelola semua metode pembayaran yang tersedia untuk pelanggan.</p>
+    <div class="header-actions">
+        <a href="{{ route('admin.payments.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Tambah Metode
+        </a>
+    </div>
 </header>
 
 <div class="admin-card">
-    <div class="admin-card-header-with-button">
-        <h2>Daftar Metode Pembayaran</h2>
-        <a href="{{ route('admin.payments.create') }}" class="btn btn-primary">
-            <i class="fa-solid fa-plus"></i> Tambah Metode
-        </a>
-    </div>
+    <div class="admin-card-body">
+        @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
 
-    @if(session('success'))
-    <div class="alert alert-success">
-        <i class="fa-solid fa-check-circle"></i>
-        {{ session('success') }}
-    </div>
-    @endif
+        <div class="admin-table-container">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Nama Metode</th>
+                        <th>Kode</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{-- Menggunakan $paymentMethods dari controller --}}
+                    @forelse ($paymentMethods as $payment)
+                    <tr>
+                        <td data-label="Nama Metode"><strong>{{ $payment->name }}</strong></td>
+                        <td data-label="Kode">{{ $payment->code }}</td>
+                        <td data-label="Status">
+                            @if ($payment->is_active)
+                            <span class="status-badge status-available">Aktif</span>
+                            @else
+                            <span class="status-badge status-out">Tidak Aktif</span>
+                            @endif
+                        </td>
+                        <td data-label="Aksi">
+                            <div class="action-buttons">
+                                {{-- Menggunakan $payment untuk route --}}
+                                <a href="{{ route('admin.payments.edit', $payment) }}" class="btn-action btn-edit"
+                                    title="Edit">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <form action="{{ route('admin.payments.destroy', $payment) }}" method="POST"
+                                    onsubmit="return confirm('Anda yakin ingin menghapus metode ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-action btn-delete" title="Hapus">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="text-center">Belum ada metode pembayaran yang ditambahkan.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-    <div class="admin-table-container">
-        <table class="admin-table modern-table">
-            <thead>
-                <tr>
-                    <th>Nama Metode</th>
-                    <th>Kode</th>
-                    <th>Deskripsi/Instruksi</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($paymentMethods as $method)
-                <tr>
-                    <td data-label="Nama Metode">
-                        <strong>{{ $method->name }}</strong>
-                    </td>
-                    <td data-label="Kode"><span class="code-badge">{{ $method->code }}</span></td>
-                    <td data-label="Deskripsi">{{ Str::limit($method->description, 50) ?? '-' }}</td>
-                    <td data-label="Status">
-                        @if($method->is_active)
-                        <span class="status-badge status-available">Aktif</span>
-                        @else
-                        <span class="status-badge status-out">Nonaktif</span>
-                        @endif
-                    </td>
-                    <td data-label="Aksi">
-                        <div class="action-buttons">
-                            <a href="{{ route('admin.payments.edit', $method->id) }}" class="btn-action btn-edit"
-                                title="Edit"><i class="fa-solid fa-pencil-alt"></i></a>
-                            <form action="{{ route('admin.payments.destroy', $method->id) }}" method="POST"
-                                onsubmit="return confirm('Anda yakin ingin menghapus metode pembayaran ini?');"
-                                style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-action btn-delete" title="Hapus"><i
-                                        class="fa-solid fa-trash-alt"></i></button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="5" class="text-center p-4">Belum ada metode pembayaran yang ditambahkan.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+        <div class="admin-card-footer">
+            {{ $paymentMethods->links('vendor.pagination.semantic-ui') }}
+        </div>
     </div>
-
-    @if($paymentMethods->hasPages())
-    <div class="admin-card-footer">
-        {{ $paymentMethods->links() }}
-    </div>
-    @endif
 </div>
 @endsection
 

@@ -84,7 +84,7 @@
 
     @if($promotions->hasPages())
     <div class="admin-card-footer">
-        {{ $promotions->links() }}
+        {{ $orders->links('vendor.pagination.semantic-ui') }}
     </div>
     @endif
 </div>

@@ -3,22 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ShippingMethod; // <-- 1. Import model yang sudah kita buat
+use App\Models\ShippingMethod;
 use Illuminate\Http\Request;
 
 class ShippingController extends Controller
 {
     /**
-     * Menampilkan daftar semua metode pengiriman.
+     * Display a listing of the resource.
      */
     public function index()
     {
-        $shippingMethods = ShippingMethod::latest()->paginate(10);
-        return view('admin.shipping.index', compact('shippingMethods'));
+        $shippingOptions = ShippingMethod::latest()->paginate(10);
+        return view('admin.shipping.index', compact('shippingOptions'));
     }
 
     /**
-     * Menampilkan form untuk membuat metode pengiriman baru.
+     * Show the form for creating a new resource.
      */
     public function create()
     {
@@ -26,60 +26,62 @@ class ShippingController extends Controller
     }
 
     /**
-     * Menyimpan metode pengiriman baru ke database.
+     * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'cost' => 'required|numeric|min:0',
-            'is_active' => 'boolean',
+            'description' => 'nullable|string',
+            'is_active' => 'sometimes|boolean',
         ]);
 
-        // Pastikan nilai boolean selalu ada (0 jika checkbox tidak dicentang)
-        $validatedData['is_active'] = $request->has('is_active');
+        // Set default is_active jika tidak ada di request
+        $validated['is_active'] = $request->has('is_active');
 
-        ShippingMethod::create($validatedData);
+        ShippingMethod::create($validated);
 
         return redirect()->route('admin.shipping.index')
-            ->with('success', 'Metode pengiriman baru berhasil ditambahkan.');
+            ->with('success', 'Metode pengiriman berhasil dibuat.');
     }
 
     /**
-     * Menampilkan form untuk mengedit metode pengiriman.
+     * Show the form for editing the specified resource.
      */
-    public function edit(ShippingMethod $shippingMethod)
+    public function edit(ShippingMethod $shippingOption)
     {
-        return view('admin.shipping.edit', compact('shippingMethod'));
+        return view('admin.shipping.edit', compact('shippingOption'));
     }
 
     /**
-     * Memperbarui data metode pengiriman di database.
+     * Update the specified resource in storage.
+     * INI BAGIAN YANG PALING PENTING UNTUK ANDA PERIKSA
      */
-    public function update(Request $request, ShippingMethod $shippingMethod)
+    public function update(Request $request, ShippingMethod $shippingOption)
     {
-        $validatedData = $request->validate([
+        // 1. Validasi input dari form
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'cost' => 'required|numeric|min:0',
-            'is_active' => 'boolean',
+            'description' => 'nullable|string',
+            'is_active' => 'required|boolean', // is_active sekarang required karena kita mengirim 0 atau 1
         ]);
 
-        $validatedData['is_active'] = $request->has('is_active');
+        // 2. Update model dengan data yang sudah divalidasi
+        $shippingOption->update($validated);
 
-        $shippingMethod->update($validatedData);
-
+        // 3. Redirect kembali ke halaman index dengan pesan sukses
         return redirect()->route('admin.shipping.index')
             ->with('success', 'Metode pengiriman berhasil diperbarui.');
     }
 
     /**
-     * Menghapus metode pengiriman dari database.
+     * Remove the specified resource from storage.
      */
-    public function destroy(ShippingMethod $shippingMethod)
+    public function destroy(ShippingMethod $shippingOption)
     {
-        $shippingMethod->delete();
+        $shippingOption->delete();
 
         return redirect()->route('admin.shipping.index')
             ->with('success', 'Metode pengiriman berhasil dihapus.');

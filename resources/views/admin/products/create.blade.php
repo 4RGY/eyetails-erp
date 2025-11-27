@@ -66,11 +66,12 @@
                         value="{{ old('sale_price') }}">
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group full-width">
-                    <label for="image">Gambar Produk</label>
-                    <input type="file" name="image" id="image" class="form-control">
-                </div>
+            <div class="form-group">
+                <label for="images">Gambar Produk (Maksimal 7 file, file pertama akan jadi utama)</label>
+                <input type="file" name="images[]" id="images" class="form-control" multiple accept="image/*">
+                @error('images.*')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
 
             <hr class="form-divider">

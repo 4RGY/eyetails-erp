@@ -87,6 +87,7 @@ class CheckoutController extends Controller
             $selectedShipping = ShippingMethod::findOrFail($request->shipping_method_id);
             $selectedPayment = PaymentMethod::findOrFail($request->payment_method_id);
 
+            // Tentukan perhitungan total, diskon, poin, dll.
             $subtotal = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
             $shippingCost = $selectedShipping->cost;
             $promoDiscount = session()->get('promo_discount', 0);
@@ -123,6 +124,7 @@ class CheckoutController extends Controller
 
             $totalAmount = $totalBeforeDiscounts - $pointsDiscount - $promoDiscount;
 
+            // 1. BUAT ORDER
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'customer_name' => $request->customer_name,
@@ -141,40 +143,33 @@ class CheckoutController extends Controller
                 'promo_discount' => $promoDiscount,
             ]);
 
+            // 2. BUAT ORDER ITEMS DAN KURANGI STOK
             foreach ($cart as $id => $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'product_id' => $item['product_id'], // Menggunakan product_id
+                    'product_id' => $item['product_id'],
                     'product_name' => $item['name'],
-                    'size' => $item['size'], // Menyimpan ukuran
+                    'size' => $item['size'],
                     'price' => $item['price'],
                     'quantity' => $item['quantity'],
                 ]);
 
-                // =======================================================
-                // AWAL DARI KODE PERBAIKAN LOGIKA PENGURANGAN STOK
-                // =======================================================
-                // Cari varian yang benar berdasarkan product_id dan size dari item keranjang
+                // Logika Pengurangan Stok
                 $variant = ProductVariant::where('product_id', $item['product_id'])
                     ->where('size', $item['size'])
                     ->first();
 
-                // Kurangi stok jika varian ditemukan
                 if ($variant) {
-                    // Pastikan stok tidak menjadi negatif (validasi tambahan)
                     if ($variant->quantity < $item['quantity']) {
                         throw new \Exception('Stok untuk produk ' . $item['name'] . ' ukuran ' . $item['size'] . ' tidak mencukupi.');
                     }
                     $variant->decrement('quantity', $item['quantity']);
                 } else {
-                    // Lemparkan error jika varian tiba-tiba tidak ditemukan
                     throw new \Exception('Varian produk ' . $item['name'] . ' ukuran ' . $item['size'] . ' tidak ditemukan.');
                 }
-                // =======================================================
-                // AKHIR DARI KODE PERBAIKAN
-                // =======================================================
             }
 
+            // 3. LOGIKA PROMO DAN LOYALTY
             if (session()->has('promo_id')) {
                 Promotion::find(session('promo_id'))->increment('usage_count');
             }
@@ -195,8 +190,28 @@ class CheckoutController extends Controller
             DB::commit();
             session()->forget(['cart', 'promo_id', 'promo_code', 'promo_discount']);
 
-            return redirect()->route('order.tracking', $order->id)
-                ->with('success', 'Pesanan Anda berhasil dibuat! Terima kasih telah berbelanja.');
+            // ==========================================================
+            // LOGIKA PENGARAHAN SESUAI METODE PEMBAYARAN (YANG DIUBAH)
+            // ==========================================================
+            if (strtolower(trim($selectedPayment->name)) == 'Midtrans.') {
+                
+
+                // JALUR BARU (Midtrans):
+                // Kita ubah status order jadi 'unpaid'
+                $order->update(['order_status' => 'unpaid']);
+
+                // Redirect ke halaman pembayaran Midtrans (PaymentController)
+                return redirect()->route('checkout.payment', $order->id);
+            } else {
+
+                // JALUR LAMA (Transfer Manual, COD, dll):
+                // Langsung ke halaman tracking
+                return redirect()->route('order.tracking', $order->id)
+                    ->with('success', 'Pesanan Anda berhasil dibuat! Terima kasih telah berbelanja.');
+            }
+            // ==========================================================
+            // AKHIR LOGIKA PENGARAHAN
+            // ==========================================================
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Checkout Error: " . $e->getMessage());

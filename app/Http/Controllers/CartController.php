@@ -58,7 +58,7 @@ class CartController extends Controller
                 "quantity" => $quantity,
                 "price" => $product->sale_price ?? $product->price,
                 "size" => $size, // <-- SIMPAN UKURAN
-                "image" => $product->image,
+                "image" => $product->primary_image,
             ];
         }
 

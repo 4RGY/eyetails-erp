@@ -75,7 +75,7 @@
 
     @if($posts->hasPages())
     <div class="admin-card-footer">
-        {{ $posts->links() }}
+        {{ $posts->links('vendor.pagination.semantic-ui') }}
     </div>
     @endif
 </div>
