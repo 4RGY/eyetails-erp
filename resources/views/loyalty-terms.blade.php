@@ -1,13 +1,12 @@
-{{-- resources/views/privacy.blade.php --}}
+{{-- resources/views/loyalty-terms.blade.php --}}
 
 @extends('layouts.app')
 
-@section('title', 'Kebijakan Privasi | eyetails.co')
+@section('title', 'Syarat Loyalitas | eyetails.co')
 
 {{--
 ======================================================================
 TAMBAHAN CSS KUSTOM UNTUK ACCORDION
-(CSS yang sama persis dari halaman sebelumnya)
 ======================================================================
 --}}
 @push('styles')
@@ -41,6 +40,7 @@ TAMBAHAN CSS KUSTOM UNTUK ACCORDION
         padding-top: 3rem;
         padding-bottom: 3rem;
         max-width: 800px;
+        /* Sedikit lebih lebar untuk konten */
     }
 
     /* Styling Accordion Wrapper */
@@ -48,6 +48,7 @@ TAMBAHAN CSS KUSTOM UNTUK ACCORDION
         border: 1px solid #ddd;
         border-radius: 8px;
         overflow: hidden;
+        /* Penting untuk border-radius */
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
@@ -58,23 +59,31 @@ TAMBAHAN CSS KUSTOM UNTUK ACCORDION
 
     .accordion-item:last-child {
         border-bottom: none;
+        /* Hapus border di item terakhir */
     }
 
     /* Styling Tombol Header */
     .accordion-header {
+        /* Reset default button styles */
         background: #ffffff;
         border: none;
         padding: 1.5rem;
         width: 100%;
         text-align: left;
         cursor: pointer;
+
+        /* Flexbox untuk layout */
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        /* Font styling */
         font-size: 1.125rem;
         /* 18px */
         font-weight: 600;
         color: #333;
+
+        /* Transisi */
         transition: background-color 0.3s ease;
     }
 
@@ -93,6 +102,7 @@ TAMBAHAN CSS KUSTOM UNTUK ACCORDION
     .accordion-header.active {
         background-color: #f7f7f7;
         color: #0056b3;
+        /* Warna aksen (biru) saat aktif */
     }
 
     .accordion-header.active i {
@@ -103,6 +113,7 @@ TAMBAHAN CSS KUSTOM UNTUK ACCORDION
     /* Styling Konten Body */
     .accordion-body {
         max-height: 0;
+        /* Default tertutup */
         overflow: hidden;
         transition: max-height 0.35s ease-out;
         background-color: #ffffff;
@@ -178,8 +189,8 @@ KONTEN HTML HALAMAN
 
 {{-- Header Halaman --}}
 <section class="page-header container text-center">
-    <h1>KEBIJAKAN PRIVASI</h1>
-    <p>Privasi Anda penting bagi kami. Berikut cara kami mengumpulkan dan melindungi data Anda.</p>
+    <h1>PROGRAM LOYALITAS PELANGGAN</h1>
+    <p>Pahami cara kerja poin, tier, dan keuntungan eksklusif Anda di sini.</p>
 </section>
 
 {{-- Konten Accordion --}}
@@ -189,14 +200,13 @@ KONTEN HTML HALAMAN
         {{-- Item 1 --}}
         <div class="accordion-item">
             <button class="accordion-header" onclick="toggleAccordion(this)">
-                <span>1. Komitmen Kami Terhadap Privasi Anda</span>
+                <span>1. Apa itu Poin Loyalitas?</span> {{-- Tambahan span agar lebih rapi --}}
                 <i class="fas fa-chevron-down"></i>
             </button>
             <div class="accordion-body">
                 <div class="accordion-body-content"> {{-- Wrapper untuk padding --}}
-                    <p>eyetails.co ("kami") berkomitmen untuk melindungi privasi data pribadi Anda. Kebijakan ini
-                        menjelaskan jenis informasi pribadi yang kami kumpulkan, bagaimana kami menggunakannya, dan
-                        langkah-langkah yang kami ambil untuk melindunginya.</p>
+                    <p>Poin Loyalitas adalah poin reward yang Anda dapatkan setiap kali bertransaksi. Poin ini dapat
+                        dikumpulkan dan ditukar dengan diskon langsung, produk gratis, atau voucher belanja.</p>
                 </div>
             </div>
         </div>
@@ -204,19 +214,20 @@ KONTEN HTML HALAMAN
         {{-- Item 2 --}}
         <div class="accordion-item">
             <button class="accordion-header" onclick="toggleAccordion(this)">
-                <span>2. Data Apa yang Kami Kumpulkan?</span>
+                <span>2. Bagaimana Cara Mendapatkan Poin?</span>
                 <i class="fas fa-chevron-down"></i>
             </button>
             <div class="accordion-body">
                 <div class="accordion-body-content">
-                    <p>Kami mengumpulkan data yang Anda berikan secara langsung saat Anda:</p>
+                    <p>Anda akan mendapatkan poin untuk aktivitas berikut:</p>
                     <ul>
-                        <li>Membuat akun (Nama, email, kata sandi).</li>
-                        <li>Melakukan pemesanan (Alamat pengiriman, nomor telepon).</li>
-                        <li>Menghubungi layanan pelanggan kami.</li>
+                        <li><strong>Belanja:</strong> Setiap kelipatan Rp 10.000,- dari total harga produk (di luar
+                            ongkir) akan mendapatkan 1 Poin.</li>
+                        <li><strong>Ulasan Produk:</strong> Berikan ulasan berkualitas (dengan foto/video) untuk produk
+                            yang Anda beli.</li>
+                        <li><strong>Promo Spesial:</strong> Dapatkan poin bonus selama periode promosi tertentu.</li>
                     </ul>
-                    <p>Kami juga dapat mengumpulkan data teknis secara otomatis, seperti alamat IP, jenis browser, dan
-                        halaman yang Anda kunjungi, untuk meningkatkan pengalaman berbelanja Anda.</p>
+                    <p>Poin akan masuk ke akun Anda secara otomatis setelah pesanan berstatus 'Selesai' (Completed).</p>
                 </div>
             </div>
         </div>
@@ -224,19 +235,15 @@ KONTEN HTML HALAMAN
         {{-- Item 3 --}}
         <div class="accordion-item">
             <button class="accordion-header" onclick="toggleAccordion(this)">
-                <span>3. Bagaimana Kami Menggunakan Data Anda?</span>
+                <span>3. Penukaran Poin (Redeem)</span>
                 <i class="fas fa-chevron-down"></i>
             </button>
             <div class="accordion-body">
                 <div class="accordion-body-content">
-                    <p>Data Anda kami gunakan untuk tujuan berikut:</p>
-                    <ul>
-                        <li>Memproses pesanan Anda, mulai dari pembayaran hingga pengiriman.</li>
-                        <li>Memberikan layanan pelanggan dan menanggapi pertanyaan Anda.</li>
-                        <li>Mengelola akun dan Program Loyalitas Anda.</li>
-                        <li>Mengirimkan informasi promosi (jika Anda setuju untuk menerimanya).</li>
-                        <li>Menganalisis data untuk meningkatkan layanan dan tata letak situs web kami.</li>
-                    </ul>
+                    <p>Poin bisa Anda tukarkan di halaman checkout sebagai potongan harga. Anda dapat melihat jumlah
+                        poin Anda di halaman 'Akun Saya'.</p>
+                    <p>Nilai tukar saat ini: <strong>1 Poin = Rp 100,-</strong> (seratus Rupiah).</p>
+                    <p>Minimum penukaran adalah 1.000 Poin (setara diskon Rp 10.000,-).</p>
                 </div>
             </div>
         </div>
@@ -244,19 +251,15 @@ KONTEN HTML HALAMAN
         {{-- Item 4 --}}
         <div class="accordion-item">
             <button class="accordion-header" onclick="toggleAccordion(this)">
-                <span>4. Pembagian Informasi dengan Pihak Ketiga</span>
+                <span>4. Masa Berlaku Poin</span>
                 <i class="fas fa-chevron-down"></i>
             </button>
             <div class="accordion-body">
                 <div class="accordion-body-content">
-                    <p>Kami tidak menjual data pribadi Anda kepada pihak ketiga. Kami hanya membagikan data Anda kepada
-                        pihak ketiga yang penting untuk menjalankan layanan kami, yaitu:</p>
-                    <ul>
-                        <li><strong>Mitra Logistik (Kurir):</strong> Untuk mengirimkan pesanan ke alamat Anda.</li>
-                        <li><strong>Penyedia Gerbang Pembayaran (Payment Gateway):</strong> Untuk memproses transaksi
-                            Anda.</li>
-                    </ul>
-                    <p>Semua mitra kami terikat oleh perjanjian kerahasiaan untuk melindungi data Anda.</p>
+                    <p>Setiap Poin Loyalitas yang Anda peroleh berlaku selama <strong>12 (dua belas) bulan</strong>
+                        sejak tanggal poin didapatkan.</p>
+                    <p>Contoh: Poin yang Anda dapatkan pada 25 Oktober 2025 akan hangus pada 24 Oktober 2026. Kami akan
+                        mengirimkan email pengingat 30 hari sebelum poin Anda hangus.</p>
                 </div>
             </div>
         </div>
@@ -264,29 +267,14 @@ KONTEN HTML HALAMAN
         {{-- Item 5 --}}
         <div class="accordion-item">
             <button class="accordion-header" onclick="toggleAccordion(this)">
-                <span>5. Keamanan Data Anda</span>
+                <span>5. Ketentuan Lainnya</span>
                 <i class="fas fa-chevron-down"></i>
             </button>
             <div class="accordion-body">
                 <div class="accordion-body-content">
-                    <p>Kami menerapkan langkah-langkah keamanan teknis dan organisasi yang wajar untuk melindungi data
-                        pribadi Anda dari kehilangan, penyalahgunaan, atau akses tidak sah. Ini termasuk penggunaan
-                        enkripsi SSL untuk transaksi data sensitif.</p>
-                </div>
-            </div>
-        </div>
-
-        {{-- Item 6 --}}
-        <div class="accordion-item">
-            <button class="accordion-header" onclick="toggleAccordion(this)">
-                <span>6. Hak Anda Atas Data Anda</span>
-                <i class="fas fa-chevron-down"></i>
-            </button>
-            <div class="accordion-body">
-                <div class="accordion-body-content">
-                    <p>Anda berhak untuk mengakses, memperbaiki, atau menghapus data pribadi yang kami simpan tentang
-                        Anda. Anda dapat mengelola sebagian besar informasi Anda langsung melalui halaman 'Akun Saya'
-                        atau dengan menghubungi layanan pelanggan kami.</p>
+                    <p>Program ini diatur oleh syarat dan ketentuan umum perusahaan. Kami berhak mengubah mekanisme,
+                        nilai tukar, atau masa berlaku poin sewaktu-waktu. Segala keputusan terkait program ini bersifat
+                        final.</p>
                 </div>
             </div>
         </div>
@@ -299,20 +287,28 @@ KONTEN HTML HALAMAN
 {{--
 ======================================================================
 SCRIPT JAVASCRIPT ACCORDION
-(Script yang sama dari halaman sebelumnya)
 ======================================================================
 --}}
 @push('scripts')
 <script>
     function toggleAccordion(header) {
+        // Toggle class 'active' pada header yang diklik
         header.classList.toggle('active');
+        
         var body = header.nextElementSibling;
+        
+        // Logika untuk membuat transisi smooth (menggunakan maxHeight)
         if (body.style.maxHeight) {
+            // Tutup
             body.style.maxHeight = null;
         } else {
+            // Buka, set tinggi ke tinggi konten agar smooth transition
+            // Kita ambil scrollHeight dari .accordion-body-content di dalamnya
             var content = body.querySelector('.accordion-body-content');
             body.style.maxHeight = content.scrollHeight + "px";
         }
+        
+        // Opsional: Tutup item lain (jika ingin satu per satu)
         document.querySelectorAll('.accordion-header').forEach(h => {
             if (h !== header && h.classList.contains('active')) {
                  h.classList.remove('active');
@@ -321,6 +317,9 @@ SCRIPT JAVASCRIPT ACCORDION
         });
     }
 
+    // [Opsional] PENTING: Untuk responsiveness jika user resize window
+    // Jika user resize window saat accordion terbuka, maxHeight-nya bisa salah.
+    // Kita buat fungsi untuk auto-adjust.
     window.addEventListener('resize', () => {
         document.querySelectorAll('.accordion-header.active').forEach(header => {
             var body = header.nextElementSibling;

@@ -148,14 +148,15 @@
     @if($product->reviews->count())
     <div class="reviews-list">
         @foreach($product->reviews as $review)
+        
+        {{-- ====================================================== --}}
+        {{--            FIX 1: ERROR $review->order                 --}}
+        {{-- ====================================================== --}}
         @php
-        // Logika untuk menemukan item yang diulas dari pesanan terkait
-        $reviewedItem = null;
-        if ($review->order) {
-        // Cari item di dalam pesanan yang cocok dengan produk yang sedang dilihat
-        $reviewedItem = $review->order->items->firstWhere('product_id', $product->id);
-        }
+            // (FIX) Ganti $review->order jadi $review->orderItem
+            $reviewedItem = $review->orderItem; 
         @endphp
+        
         <div class="review-card">
             <div class="review-header">
                 <div class="review-author-info">
@@ -172,7 +173,10 @@
             @if($reviewedItem)
             <div class="reviewed-product-info">
                 <i class="fas fa-check-circle"></i> Pembelian Terverifikasi:
-                <strong>{{ $reviewedItem->product_name }}
+                {{-- ====================================================== --}}
+                {{--          FIX 2: BUG $reviewedItem->product_name        --}}
+                {{-- ====================================================== --}}
+                <strong>{{ $reviewedItem->product->name ?? 'Produk' }}
                     @if($reviewedItem->size)
                     (Ukuran: {{ $reviewedItem->size }})
                     @endif
@@ -180,7 +184,10 @@
             </div>
             @endif
 
-            <p class="review-content">{{ $review->content }}</p>
+            {{-- ====================================================== --}}
+            {{--          FIX 3: BUG $review->content                  --}}
+            {{-- ====================================================== --}}
+            <p class="review-content">{{ $review->content }}</p> {{-- (FIX) Ganti ke 'content' --}}
         </div>
         @endforeach
     </div>
@@ -201,7 +208,8 @@
     </div>
     <div class="modal-body">
         <div class="modal-product-info">
-            <img src="{{ $product->primary_image ? asset('storage/' . $product->primary_image) : 'https://via.placeholder.com/80x100' }}"
+            {{-- (FIX) Ganti primary_image jadi relasi yg bener + anti error --}}
+            <img src="{{ $product->images->first() ? asset('storage/' . $product->images->first()->path) : 'https://via.placeholder.com/80x100' }}"
                 alt="{{ $product->name }}">
             <div>
                 <p><strong>{{ $product->name }}</strong></p>
@@ -223,6 +231,11 @@
 
 @endsection
 
+{{-- 
+======================================================================
+ (BAGIAN <STYLE> DAN <SCRIPT> LU DI BAWAH INI GAK GW UBAH SAMA SEKALI)
+====================================================================== 
+--}}
 @push('styles')
 <style>
     /* Halaman Detail Produk */

@@ -9,17 +9,18 @@
     <div class="swiper mySwiper">
         <div class="swiper-wrapper">
             <div class="swiper-slide slide slide-1">
-                <img src="https://shiningbright.co.id/cdn/shop/files/BANNER-WEB-SHINING-BRIGHT-X-SUPERMAN-3_1920x864.jpg?v=1719204128"
+                <img src="{{ asset('storage/banners/car.jpg') }}"
                     alt="New Collection" class="slide-image">
                 <div class="slide-content">
-                    <span class="subtitle">Official Collaboration</span>
-                    <h1>SHINING BRIGHT X SUPERMAN</h1>
-                    <p>Koleksi eksklusif yang menggabungkan ikon pop kultur dengan gaya urban khas kami.</p>
+                    <span class="subtitle">OFFICIAL COLLABORATION</span>
+                    <h1>EYETAILS X PORSCHE</h1>
+                    <p>Sebuah kolaborasi ikonik antara performa legendaris dan desain urban futuristik. Dibuat untuk mereka yang hidup cepat,
+                    berpikir tajam, dan tampil berkelas.</p>
                     <a href="{{ route('catalog.index') }}" class="btn btn-primary">Lihat Koleksi</a>
                 </div>
             </div>
             <div class="swiper-slide slide slide-2">
-                <img src="https://shiningbright.co.id/cdn/shop/files/BANNER-WEB-SHINING-BRIGHT-2_1920x864.jpg?v=1718855655"
+                <img src="{{ asset('storage/banners/ousel.jpg') }}"
                     alt="Core Collection" class="slide-image">
                 <div class="slide-content">
                     <span class="subtitle">Core Collection 2025</span>
@@ -58,8 +59,16 @@
         <div class="category-grid">
             @foreach ($categories as $category)
             <a href="{{ route('catalog.index', ['category' => $category->slug]) }}" class="category-card">
+                {{-- ====================================================== --}}
+                {{-- PERUBAHAN UTAMA ADA DI BLOK @if INI --}}
+                {{-- ====================================================== --}}
+                @if($category->image_path)
+                <img src="{{ asset('storage/' . $category->image_path) }}" alt="{{ $category->name }}">
+                @else
                 <img src="https://via.placeholder.com/400x533/222/fff?text={{ urlencode($category->name) }}"
                     alt="{{ $category->name }}">
+                @endif
+                {{-- ====================================================== --}}
                 <div class="category-card-overlay">
                     <h3 class="category-card-title">{{ $category->name }}</h3>
                 </div>

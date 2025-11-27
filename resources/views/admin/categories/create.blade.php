@@ -5,7 +5,7 @@
 @section('content')
 <header class="admin-content-header">
     <h1>Tambah Kategori Baru</h1>
-    <p>Isi nama kategori yang ingin ditambahkan di bawah ini.</p>
+    <p>Isi detail kategori yang ingin ditambahkan di bawah ini.</p>
 </header>
 
 <div class="admin-card">
@@ -21,14 +21,22 @@
         </div>
         @endif
 
-        <form action="{{ route('admin.categories.store') }}" method="POST" class="admin-form">
+        {{-- PERUBAHAN: Tambahkan enctype untuk upload file --}}
+        <form action="{{ route('admin.categories.store') }}" method="POST" class="admin-form"
+            enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="name">Nama Kategori</label>
                 <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required
                     autofocus>
-                <small class="form-text text-muted">Nama kategori harus unik dan deskriptif, contoh: "T-Shirt", "Hoodie
-                    & Sweater".</small>
+                <small class="form-text text-muted">Nama kategori harus unik dan deskriptif, contoh: "T-Shirt".</small>
+            </div>
+
+            {{-- TAMBAHKAN INPUT FILE INI --}}
+            <div class="form-group">
+                <label for="image_path">Gambar Kategori (Opsional)</label>
+                <input type="file" name="image_path" id="image_path" class="form-control-file">
+                <small class="form-text text-muted">Direkomendasikan gambar dengan rasio 3:4 (portrait).</small>
             </div>
 
             <div class="form-actions">
@@ -39,35 +47,35 @@
     </div>
 </div>
 
-{{-- CSS Tambahan --}}
 <style>
     .admin-form .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 20px
     }
 
     .admin-form label {
         display: block;
         font-weight: 600;
         margin-bottom: 5px;
-        font-size: 0.9rem;
+        font-size: .9rem
     }
 
-    .admin-form .form-control {
+    .admin-form .form-control,
+    .admin-form .form-control-file {
         width: 100%;
         max-width: 500px;
         padding: 10px 12px;
         border: 1px solid #ccc;
         border-radius: 4px;
         font-size: 1rem;
-        box-sizing: border-box;
+        box-sizing: border-box
     }
 
     .form-text {
-        font-size: 0.85rem;
+        font-size: .85rem
     }
 
     .form-actions {
-        margin-top: 30px;
+        margin-top: 30px
     }
 
     .btn {
@@ -78,17 +86,17 @@
         border: none;
         cursor: pointer;
         text-decoration: none;
-        display: inline-block;
+        display: inline-block
     }
 
     .btn-primary {
         background-color: var(--primary-accent);
-        color: white;
+        color: #fff
     }
 
     .btn-secondary {
         background-color: #6c757d;
-        color: white;
+        color: #fff
     }
 
     .alert-danger {
@@ -97,7 +105,7 @@
         padding: 1rem;
         border: 1px solid #f5c6cb;
         border-radius: .25rem;
-        margin-bottom: 1rem;
+        margin-bottom: 1rem
     }
 </style>
 @endsection

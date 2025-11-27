@@ -14,8 +14,8 @@
         <a href="{{ route('chat.show', $conversation) }}"
             class="conversation-item {{ !$conversation->is_read_by_user && $conversation->messages->last()->user_id != Auth::id() ? 'unread' : '' }}">
             <div class="item-product-info">
-                @if($conversation->product && $conversation->product->image)
-                <img src="{{ asset('storage/' . $conversation->product->image) }}"
+                @if($conversation->product && $conversation->product->primary_image)
+                <img src="{{ asset('storage/' . $conversation->product->primary_image) }}"
                     alt="{{ $conversation->product->name }}">
                 @else
                 <img src="https://via.placeholder.com/60x80" alt="Produk">

@@ -1,70 +1,193 @@
-<<<<<<< HEAD
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# EYETAILS.CO
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**EYETAILS.CO** adalah platform e-commerce berbasis Laravel yang menyediakan pengalaman belanja lengkap — dari katalog produk, keranjang, checkout, hingga manajemen pesanan dan admin panel yang kuat.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Table of Contents
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* [About the Project](#about-the-project)
+* [Features](#features)
+* [Built With](#built-with)
+* [Getting Started](#getting-started)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+* [Usage](#usage)
+* [Admin Access](#admin-access)
+* [Contributing](#contributing)
+* [License](#license)
+* [Contact](#contact)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## About the Project
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+EYETAILS.CO dikembangkan untuk memberikan solusi toko online yang fleksibel, modern, dan mudah diatur. Proyek ini mencakup sistem frontend untuk pelanggan serta backend untuk pengelolaan toko oleh admin.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🛍️ User Side
 
-### Premium Partners
+* **Authentication** (Register, Login, Google OAuth)
+* **Product Catalog** with category filters and detail pages
+* **Shopping Cart** with session-based management
+* **Smooth Checkout** flow with shipping & payment options
+* **Order History** and live order tracking
+* **Wishlist & Product Reviews**
+* **Return Requests**
+* **Live Chat Support**
+* **Blog/Articles Page**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### ⚙️ Admin Panel
+
+* **Dashboard Analytics** with sales overview
+* **Product Management** (CRUD, multi-image upload, variants)
+* **Order Management** (status updates, tracking number)
+* **User Management**
+* **Category & Promotion Management**
+* **Blog/Content Management**
+* **Shipping & Payment Settings**
+* **Sales Reports & Email Campaigns**
+* **Global Settings Configuration**
+
+---
+
+## Built With
+
+* [Laravel 10](https://laravel.com/)
+* [Blade Template Engine](https://laravel.com/docs/10.x/blade)
+* [Alpine.js](https://alpinejs.dev/)
+* [MySQL](https://www.mysql.com/)
+* [Swiper.js](https://swiperjs.com/)
+* [Laravel Socialite](https://laravel.com/docs/10.x/socialite)
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+Pastikan Anda memiliki:
+
+* PHP ≥ 8.1
+* Composer
+* Node.js & NPM
+* Database server (MySQL/MariaDB)
+
+### Installation
+
+1. **Clone repository**
+
+   ```bash
+   git clone [URL_REPOSITORY_ANDA]
+   cd eyetails_erp
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   composer install
+   npm install
+   ```
+
+3. **Set environment**
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Sesuaikan pengaturan database Anda:
+
+   ```
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=eyetails_erp
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+
+4. **Generate application key**
+
+   ```bash
+   php artisan key:generate
+   ```
+
+5. **Run migrations and seeders**
+
+   ```bash
+   php artisan migrate --seed
+   ```
+
+6. **Create storage symlink**
+
+   ```bash
+   php artisan storage:link
+   ```
+
+7. **Compile assets**
+
+   ```bash
+   npm run dev
+   ```
+
+8. **Start local server**
+
+   ```bash
+   php artisan serve
+   ```
+
+Akses aplikasi di:
+👉 `http://127.0.0.1:8000`
+
+---
+
+## Usage
+
+Setelah instalasi berhasil:
+
+* Pengguna dapat menjelajahi katalog produk, menambahkan ke keranjang, checkout, dan memantau status pesanan.
+* Admin dapat login ke `/admin/dashboard` untuk mengelola produk, pesanan, pengguna, promosi, dan konten lainnya.
+
+---
+
+## Admin Access
+
+Akun admin default (setelah `php artisan migrate --seed`):
+
+```
+Email: admin@eyetails.co
+Password: password
+```
+
+---
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Kontribusi selalu terbuka!
+Untuk berkontribusi:
 
-## Code of Conduct
+1. Fork repository ini.
+2. Buat branch baru: `git checkout -b feature/AmazingFeature`.
+3. Commit perubahan Anda: `git commit -m 'Add some AmazingFeature'`.
+4. Push ke branch: `git push origin feature/AmazingFeature`.
+5. Buat **Pull Request**.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# eyetails-erp
->>>>>>> 0aaa4553a6c39c6f50a6713b97d90cd75f0d4d43
+Proyek ini dilisensikan di bawah [MIT License](LICENSE).
+
+---
+
+## Contact
+
+**EYETAILS.CO**
+Website: [https://eyetails.co](https://eyetails.co)
+Email: [admin@eyetails.co](mailto:admin@eyetails.co) 
+
+Project Link: [https://github.com/yourusername/eyetails_erp](https://github.com/4RGY/eyetails_erp)

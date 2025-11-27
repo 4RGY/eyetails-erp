@@ -7,12 +7,18 @@
 <section class="container">
     <div class="return-form-card">
         <div class="product-info-header">
-            <img src="https://via.placeholder.com/100x120/F0F0F0?text=Produk" alt="{{ $item->product_name }}">
-            <div>
-                <p class="text-gray-600">Anda mengajukan pengembalian untuk:</p>
-                <h2>{{ $item->product_name }}</h2>
-                <p class="text-gray-500">Dari Pesanan #{{ $item->order_id }}</p>
-            </div>
+            @if($item->product && $item->product->primary_image)
+                <img src="{{ asset('storage/' . $item->product->primary_image) }}" alt="{{ $item->product_name }}"
+                    class="product-image">
+                @else
+                <img src="https://via.placeholder.com/80x100/F0F0F0?text=Produk" alt="{{ $item->product_name }}"
+                    class="product-image">
+                @endif
+                <div>
+                    <p class="text-gray-600">Anda mengajukan pengembalian untuk:</p>
+                    <h2>{{ $item->product_name }}</h2>
+                    <p class="text-gray-500">Dari Pesanan #{{ $item->order_id }}</p>
+                </div>
         </div>
 
         {{-- PERUBAHAN: Tambahkan enctype untuk upload file --}}
@@ -75,6 +81,12 @@
         margin-bottom: 20px;
         border-bottom: 1px solid #eee;
     }
+    .product-image {
+        width: 80px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 4px
+        }
 
     .product-info-header img {
         border-radius: 4px;

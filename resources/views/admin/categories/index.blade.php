@@ -33,7 +33,8 @@
         <table class="admin-table modern-table">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    {{-- TAMBAHKAN KOLOM GAMBAR --}}
+                    <th>Gambar</th>
                     <th>Nama Kategori</th>
                     <th>Slug</th>
                     <th>Jumlah Produk</th>
@@ -43,7 +44,16 @@
             <tbody>
                 @forelse ($categories as $category)
                 <tr>
-                    <td data-label="ID">{{ $category->id }}</td>
+                    {{-- TAMPILKAN GAMBAR DI SINI --}}
+                    <td data-label="Gambar">
+                        @if($category->image_path)
+                        <img src="{{ asset('storage/' . $category->image_path) }}" alt="{{ $category->name }}"
+                            class="category-thumbnail">
+                        @else
+                        <img src="https://via.placeholder.com/80x80/f0f0f0?text=No+Img" alt="No Image"
+                            class="category-thumbnail">
+                        @endif
+                    </td>
                     <td data-label="Nama Kategori"><strong>{{ $category->name }}</strong></td>
                     <td data-label="Slug">{{ $category->slug }}</td>
                     <td data-label="Jumlah Produk">{{ $category->products_count }}</td>
@@ -52,7 +62,7 @@
                             <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn-action btn-edit"
                                 title="Edit"><i class="fa-solid fa-pencil-alt"></i></a>
                             <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST"
-                                onsubmit="return confirm('Anda yakin ingin menghapus kategori ini?');"
+                                onsubmit="return confirm('Anda yakin ingin menghapus kategori ini? Menghapus kategori juga akan menghapus gambarnya.');"
                                 style="display:inline;">
                                 @csrf
                                 @method('DELETE')
@@ -64,6 +74,7 @@
                 </tr>
                 @empty
                 <tr>
+                    {{-- Sesuaikan colspan menjadi 5 --}}
                     <td colspan="5" class="text-center p-4">Belum ada kategori yang ditambahkan.</td>
                 </tr>
                 @endforelse
@@ -81,7 +92,14 @@
 
 @push('styles')
 <style>
-    /* Common styles for alerts, buttons, headers */
+    /* Tambahkan style untuk thumbnail gambar */
+    .category-thumbnail {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
     .alert {
         padding: 1rem;
         margin: 1rem 0;
@@ -89,19 +107,19 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        font-weight: 500;
+        font-weight: 500
     }
 
     .alert-success {
         background-color: #e6f9f0;
         color: #00874e;
-        border: 1px solid #b3e6d1;
+        border: 1px solid #b3e6d1
     }
 
     .alert-danger {
         background-color: #f8d7da;
         color: #721c24;
-        border: 1px solid #f5c6cb;
+        border: 1px solid #f5c6cb
     }
 
     .admin-card-header-with-button {
@@ -109,26 +127,25 @@
         justify-content: space-between;
         align-items: center;
         padding: 15px 20px;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color)
     }
 
     .btn-primary {
         background-color: var(--primary-accent);
-        color: white;
+        color: #fff;
         padding: 10px 15px;
         border-radius: 5px;
         text-decoration: none;
-        font-weight: 600;
+        font-weight: 600
     }
 
-    /* Modern & Responsive Table Design */
     .admin-table-container {
-        overflow-x: auto;
+        overflow-x: auto
     }
 
     .modern-table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: collapse
     }
 
     .modern-table th {
@@ -137,9 +154,9 @@
         background-color: #f8f9fa;
         font-weight: 600;
         text-transform: uppercase;
-        font-size: 0.8rem;
+        font-size: .8rem;
         color: #6c757d;
-        border-bottom: 2px solid #e9ecef;
+        border-bottom: 2px solid #e9ecef
     }
 
     .modern-table td {
@@ -147,17 +164,16 @@
         text-align: left;
         vertical-align: middle;
         border-bottom: 1px solid #e9ecef;
-        color: #343a40;
+        color: #343a40
     }
 
     .modern-table tbody tr:hover {
-        background-color: #f8f9fa;
+        background-color: #f8f9fa
     }
 
-    /* Action Buttons - Standardized */
     .action-buttons {
         display: flex;
-        gap: 0.5rem;
+        gap: .5rem
     }
 
     .btn-action {
@@ -170,57 +186,54 @@
         color: #fff;
         border: none;
         cursor: pointer;
-        font-size: 0.9rem;
-        transition: transform 0.2s;
+        font-size: .9rem;
+        transition: transform .2s
     }
 
     .btn-action:hover {
-        transform: scale(1.1);
+        transform: scale(1.1)
     }
 
     .btn-edit {
-        background-color: #16a34a;
+        background-color: #16a34a
     }
 
-    /* Green */
     .btn-delete {
-        background-color: #ef4444;
+        background-color: #ef4444
     }
 
-    /* Red */
     .admin-card-footer {
         padding: 15px 20px;
-        border-top: 1px solid var(--border-color);
+        border-top: 1px solid var(--border-color)
     }
 
-    /* RESPONSIVE: Table to Card on Mobile */
-    @media (max-width: 992px) {
+    @media (max-width:992px) {
         .modern-table thead {
-            display: none;
+            display: none
         }
 
-        .modern-table tr,
-        .modern-table td {
+        .modern-table td,
+        .modern-table tr {
             display: block;
             width: 100%;
-            box-sizing: border-box;
+            box-sizing: border-box
         }
 
         .modern-table tr {
             margin-bottom: 1rem;
             border: 1px solid #e9ecef;
-            border-radius: 8px;
+            border-radius: 8px
         }
 
         .modern-table td {
             text-align: right;
             padding-left: 50%;
             position: relative;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0
         }
 
         .modern-table td:last-child {
-            border-bottom: none;
+            border-bottom: none
         }
 
         .modern-table td:before {
@@ -230,12 +243,12 @@
             text-align: left;
             font-weight: 600;
             color: #6c757d;
-            font-size: 0.8rem;
-            text-transform: uppercase;
+            font-size: .8rem;
+            text-transform: uppercase
         }
 
         .action-buttons {
-            justify-content: flex-end;
+            justify-content: flex-end
         }
     }
 </style>

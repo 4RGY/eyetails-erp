@@ -48,8 +48,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        // PERUBAHAN: Tambahkan 'reviews.order.items' untuk memuat detail item yang diulas
-        $product->load('variants', 'reviews.user', 'reviews.order.items');
+        // GANTI 'reviews.order' menjadi 'reviews.orderItem' agar sesuai
+        // dengan yang kamu panggil di view ('show.blade.php')
+        $product->load('variants', 'reviews.user', 'reviews.orderItem');
 
         return view('katalog.show', compact('product'));
     }

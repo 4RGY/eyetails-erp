@@ -52,4 +52,10 @@ class PageController extends Controller
     {
         return view('privacy');
     }
+
+    public function loyaltyTerms()
+    {
+        // Ini hanya akan mengembalikan file view yang akan kita buat di Langkah 4
+        return view('loyalty-terms');
+    }
 }

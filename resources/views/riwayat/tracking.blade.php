@@ -133,6 +133,7 @@
                 </div>
                 <div class="block-content shipping-info">
                     <p><strong>{{ $order->customer_name }}</strong></p>
+                    <p>{{ $order->phone ?? 'Tidak ada' }}</p>
                     <p>{{ $order->shipping_address }}</p>
                 </div>
             </div>

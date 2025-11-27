@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\UserOrderController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReturnRequestController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Auth\SocialiteController;
 // =================================================
 // ADMIN ROUTE
@@ -54,6 +56,7 @@ Route::view('/faq', 'faq')->name('faq');
 Route::view('/syarat-dan-ketentuan', 'terms')->name('terms');
 Route::view('/kebijakan-privasi', 'privacy')->name('privacy');
 Route::view('/testimoni', 'testimoni')->name('testimoni');
+Route::get('/syarat-loyalitas', [PageController::class, 'loyaltyTerms'])->name('loyalty.terms');
 
 // Katalog & Detail Produk
 Route::get('/katalog', [ProductController::class, 'index'])->name('catalog.index');
@@ -128,6 +131,7 @@ Route::middleware(['auth'])->group(function () {
     // Riwayat Pesanan & Lacak Pesanan (23-24 Oktober)
     Route::post('/keranjang/add/{product:slug}', [CartController::class, 'add'])->name('cart.add');
     Route::get('/riwayat-pesanan', [UserOrderController::class, 'index'])->name('order.history');
+    Route::get('/checkout/payment/{order}', [PaymentController::class, 'show'])->name('checkout.payment');
     Route::get('/order/{order}/tracking', [UserOrderController::class, 'tracking'])->name('order.tracking');
 
     // Wishlist (25-27 Oktober)
